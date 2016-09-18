@@ -281,8 +281,10 @@ let quadrupled_z_again : int = twice double z  (* pass double to twice *)
 let pieces : int = -1
 
 (*
- * Implement a function cube that takes an int value and produces its cube.
+ * Implement a function fourth power that takes an int value and
+ * produces its fourth power. For example, fourthpower 2 is 16.
  *)
+
 let fourthpower : int -> int = 
    fun _ -> failwith "unimplemented"
 
