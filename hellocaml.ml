@@ -278,7 +278,7 @@ let quadrupled_z_again : int = twice double z  (* pass double to twice *)
  * makes the first case of part1_tests "Problem 1" succeed. See the 
  * gradedtests.ml file.  
  *)   
-let pieces : int = -1
+let pieces : int = 10
 
 (*
  * Implement a function fourth power that takes an int value and
@@ -286,7 +286,7 @@ let pieces : int = -1
  *)
 
 let fourthpower : int -> int = 
-   fun _ -> failwith "unimplemented"
+   fun x -> x*x*x*x
 
 
 (* Problem 1-2 *)
@@ -297,7 +297,7 @@ let fourthpower : int -> int =
  * p - a number of pennies
  * and computes the total value of the coins in cents: *)
 let cents_of : int -> int -> int -> int -> int = 
-  fun _ -> failwith "cents_of unimplemented"
+  fun q d n p -> (q*25) + (d*10) + (n*5) + p
 
 
 (* Problem 1-3 *)
