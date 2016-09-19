@@ -437,7 +437,10 @@ let pair_up (x:'a) : ('a * 'a) = (x, x)
  * Complete the definition of third_of_three; be sure to give it 
  * the correct type signature (we will grade that part manually):
  *)
-let third_of_three _ = failwith "third_of_three unimplemented"
+let third_of_three (t:'a * 'b * 'c) : 'c = 
+    begin match t with
+    | (_,_,x) -> x
+    end
 
 
 (*
@@ -450,7 +453,8 @@ let third_of_three _ = failwith "third_of_three unimplemented"
  *)
 
 let compose_pair (p:(('b -> 'c) * ('a -> 'b))) : 'a -> 'c =
-failwith "compose_pair unimplemented"
+    match p with
+    | (f1, f2) -> fun input -> f1 (f2 input)
 
 (*
  * Problem 2-3
@@ -461,7 +465,8 @@ failwith "compose_pair unimplemented"
  *)
 
 let apply_pair (p:(('a -> 'b) * ('b -> 'c))) : 'a -> 'c = 
-failwith "compose_pair unimplemented"
+    match p with
+    | (f1, f2) -> fun input -> f2 (f1 input)
 
 
 (******************************************************************************)
