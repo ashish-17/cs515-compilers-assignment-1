@@ -639,7 +639,10 @@ let rec mylist_to_list (l:'a mylist) : 'a list =
  * the inverse of the mylist_to_list function given above.
  *)
 let rec list_to_mylist (l:'a list) : 'a mylist =
-failwith "list_to_mylist unimplemented"
+    begin match l with
+    | [] -> Nil
+    | h::tl -> Cons(h, list_to_mylist tl)
+    end
 
 
 (*
@@ -657,8 +660,16 @@ failwith "list_to_mylist unimplemented"
  * ([1;2] @ [3]).
  *) 
 let rec append (l1:'a list) (l2:'a list) : 'a list =
-failwith "append unimplemented"
-  
+    begin match l1 with
+    | [] -> 
+            begin match l2 with
+            | [] -> []
+            | h2::tl2 -> append l2 []
+            end
+    | h1::tl1 -> h1 :: append tl1 l2
+    end
+
+
 (*
  * Problem 3-3
  * 
@@ -667,7 +678,11 @@ failwith "append unimplemented"
  * the library function.
  *)
 let rec rev (l:'a list) : 'a list =
-failwith "rev unimplemented"
+    begin match l with
+    | [] -> []
+    | h::[] ->[h]
+    | h::tl -> append (rev tl) [h]
+    end
 
 (*
  * Problem 3-4
@@ -681,7 +696,14 @@ failwith "rev unimplemented"
  * a tail recursive function to a simple loop.
  *)
 let rev_t (l: 'a list) : 'a list =
-failwith "rev_t unimplemented"
+    begin
+        let rec rev_helper (l: 'a list) (r: 'a list) =
+            begin match l with
+            | [] -> r
+            | h::t -> rev_helper t (append [h]  r)
+            end in
+        rev_helper l []
+    end
 
 
 (*
