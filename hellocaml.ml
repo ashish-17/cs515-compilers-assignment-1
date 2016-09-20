@@ -717,7 +717,10 @@ let rev_t (l: 'a list) : 'a list =
  * depending on whether t evaluates to true or false.
  *)
 let rec insert (x:'a) (l:'a list) : 'a list =
-failwith "insert unimplemented"
+    begin match l with
+    | [] -> [x]
+    | h::tl -> if h=x then l else if h < x then h::insert x tl else x::l
+    end
   
   
 (*
@@ -729,7 +732,14 @@ failwith "insert unimplemented"
  * insert function that you just defined.
  *)
 let rec union (l1:'a list) (l2:'a list) : 'a list =
- failwith "union unimplemented"
+    begin match l1 with
+    | [] -> l2
+    | h1::tl1 ->
+            begin match l2 with
+            | [] -> l1
+            | h2::tl2 -> if h1=h2 then h1::union tl1 tl2 else if h1 < h2 then h1::union tl1 l2 else h2::union l1 tl2
+            end
+    end
 
 (*
  * Problem 3-7
@@ -743,7 +753,37 @@ let rec union (l1:'a list) (l2:'a list) : 'a list =
  *
  *)
 let rec msort (l: 'a list): 'a list  = 
-  failwith "msort unimplemented"
+    begin match l with
+    | [] -> []
+    | [a] -> [a]
+    | h::tl ->
+            begin
+            let rec list_length l =
+                begin match l with
+                | [] -> 0
+                | h::tl -> 1 + list_length tl
+                end 
+            in
+            let rec first_n l n =
+                begin match l with
+                | [] -> raise (Failure "List too short")
+                | h::tl -> if n > 1 then h::first_n tl (n-1) else if n = 1 then [h] else raise (Failure "Invalid arguments")
+                end 
+            in
+            let rec last_n l n =
+                let rl = rev_t l in
+                rev_t (first_n rl n)
+            in
+            begin
+                let size = list_length l in
+                let first_half = size / 2 in
+                let second_half = size - first_half in
+                let l1 = first_n l first_half in
+                let l2 = last_n l second_half in
+                union (msort l1) (msort l2)
+            end
+            end
+    end
                               
                                                   
 (******************************************************************************)
