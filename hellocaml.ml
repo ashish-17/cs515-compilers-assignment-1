@@ -661,11 +661,7 @@ let rec list_to_mylist (l:'a list) : 'a mylist =
  *) 
 let rec append (l1:'a list) (l2:'a list) : 'a list =
     begin match l1 with
-    | [] -> 
-            begin match l2 with
-            | [] -> []
-            | h2::tl2 -> append l2 []
-            end
+    | [] -> l2
     | h1::tl1 -> h1 :: append tl1 l2
     end
 
