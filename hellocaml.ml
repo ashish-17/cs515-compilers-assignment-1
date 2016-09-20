@@ -871,7 +871,13 @@ let e3 : exp = Mult(Var "y", Mult(e2, Neg e2))     (* "y * ((x+1) * -(x+1))" *)
  * Hint: you probably want to use the 'union' function you wrote for Problem 3-5.
  *)
 let rec vars_of (e:exp) : string list =
-failwith "vars_of unimplemented"
+    begin match e with
+    | Var str -> [str]
+    | Const x -> []
+    | Add (exp1, exp2) -> union (vars_of exp1) (vars_of exp2)
+    | Mult (exp1, exp2) -> union (vars_of exp1) (vars_of exp2)
+    | Neg exp1 -> vars_of exp1
+    end
 
 
 (*
@@ -934,8 +940,10 @@ let ctxt2 : ctxt = [("x", 2l); ("y", 7l)]  (* maps "x" to 2l, "y" to 7l *)
  * raise the Not_found exception 
  *)
 let rec lookup (x:string) (c:ctxt) : int32 =
-failwith "unimplemented"
-
+    begin match c with
+    | [] -> raise Not_found
+    | h::tl -> if (fst h) = x then snd h else lookup x tl
+    end
 
 
 (* 
@@ -964,7 +972,13 @@ failwith "unimplemented"
  *)        
 
 let rec interpret (c:ctxt) (e:exp) : int32 =
-  failwith "unimplemented"
+    begin match e with
+    | Var str -> lookup str c
+    | Const x -> x
+    | Add (exp1, exp2) -> Int32.add  (interpret c exp1) (interpret c exp2)
+    | Mult (exp1, exp2) -> Int32.mul (interpret c exp1) (interpret c exp2)
+    | Neg exp1 -> Int32.neg (interpret c exp1)
+    end
 
 
 (*
