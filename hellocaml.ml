@@ -1019,8 +1019,44 @@ let rec interpret (c:ctxt) (e:exp) : int32 =
  *)   
 
 let rec optimize (e:exp) : exp =
-failwith "optimize unimplemented"  
-  
+    begin match e with
+    | Var str -> e
+    | Const x -> e
+    | Add (exp1, exp2) -> 
+            begin match (exp1, exp2) with
+            | (Const 0l, exp2) -> optimize exp2
+            | (exp1, Const 0l) -> optimize exp1
+            | (Const a, Const b) -> Const (Int32.add a b)
+            | (exp1, exp2) ->
+                    begin
+                        let oexp1 = optimize exp1 in
+                        let oexp2 = optimize exp2 in
+                        if exp1 != oexp1 || exp2 != oexp2 then
+                            optimize (Add (oexp1, oexp2))
+                        else
+                            Add (oexp1, oexp2)
+                    end
+            end
+    | Mult (exp1, exp2) -> 
+            begin match (exp1, exp2) with
+            | (Const 0l, exp2) -> Const 0l
+            | (exp1, Const 0l) -> Const 0l
+            | (Const 1l, exp2) -> optimize exp2
+            | (exp1, Const 1l) -> optimize exp1
+            | (Const a, Const b) -> Const (Int32.mul a b)
+            | (exp1, exp2) ->
+                    begin
+                        let oexp1 = optimize exp1 in
+                        let oexp2 = optimize exp2 in
+                        if exp1 != oexp1 || exp2 != oexp2 then
+                            optimize (Mult (oexp1, oexp2))
+                        else
+                            Mult (oexp1, oexp2)
+                    end
+            end
+    | Neg exp1 -> Neg (optimize exp1)
+    end
+
 
 (*
  * The interpreter for the expression language above is simple, but
