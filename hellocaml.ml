@@ -1031,7 +1031,7 @@ let rec optimize (e:exp) : exp =
                     begin
                         let oexp1 = optimize exp1 in
                         let oexp2 = optimize exp2 in
-                        if exp1 != oexp1 || exp2 != oexp2 then
+                        if exp1 <> oexp1 || exp2 <> oexp2 then
                             optimize (Add (oexp1, oexp2))
                         else
                             Add (oexp1, oexp2)
@@ -1048,13 +1048,24 @@ let rec optimize (e:exp) : exp =
                     begin
                         let oexp1 = optimize exp1 in
                         let oexp2 = optimize exp2 in
-                        if exp1 != oexp1 || exp2 != oexp2 then
+                        if exp1 <> oexp1 || exp2 <> oexp2 then
                             optimize (Mult (oexp1, oexp2))
                         else
                             Mult (oexp1, oexp2)
                     end
             end
-    | Neg exp1 -> Neg (optimize exp1)
+    | Neg exp1 -> 
+            begin match exp1 with
+            | Const x -> Const (Int32.mul (-1l) x)
+            | _ -> 
+                    begin
+                        let oexp1 = optimize exp1 in
+                        if oexp1 <> exp1 then
+                            optimize (Neg oexp1)
+                        else
+                            Neg oexp1
+                    end
+            end
     end
 
 
